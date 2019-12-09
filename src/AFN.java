@@ -44,7 +44,48 @@ public class AFN <S>{
         return false;
     }
 
+    public boolean isDeterministic(){
+        Iterator<S> states=setOfStates.iterator();
+        while(states.hasNext()){
+            S state=states.next();
+            for(Letter l:  alphabet){
+                if(transitionRelation.successor(state, l).getSetofStates().size()>1){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
+    public boolean isComplete(){
+        Iterator<S> states=setOfStates.iterator();
+        while(states.hasNext()){
+            S state=states.next();
+            for(Letter l:  alphabet){
+                if(transitionRelation.successor(state, l).getSetofStates().isEmpty()){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public void complete(){
+        if(!isComplete()){
+            State well=new State("I");
+            setOfStates.addState((S)well);
+            Iterator<S> states=setOfStates.iterator();
+            while(states.hasNext()){
+                S state=states.next();
+                for(Letter l:  alphabet){
+                    if(transitionRelation.successor(state, l).getSetofStates().isEmpty()){
+                        Transition newTransition=new Transition(state, l, well);
+                        transitionRelation.addTransition(newTransition);
+                    }
+                }
+            }
+        }
+    }
 
     public HashSet<Letter> getAlphabet() {
         return alphabet;
