@@ -38,10 +38,35 @@ public class AFN <S>{
     }
 
     public boolean emptyLanguage(){
-        if(setOfFinalStates.getSetofStates().isEmpty()){
+        if(setOfInitialStates.getSetofStates().isEmpty()){
+            return true;
+        }
+        else if (setOfFinalStates.getSetofStates().isEmpty()){
            return true;
         }
-        return false;
+        else if(!setOfInitialStates.getSetofStates().isEmpty() && !setOfFinalStates.getSetofStates().isEmpty()){
+            States<S> s=setOfInitialStates;
+            States<S> previous=new States<>();
+            States<S> successor=new States<>();
+            while(!s.getSetofStates().equals(previous.getSetofStates())){
+                for(Letter l: alphabet){
+                    successor.addAllStates(transitionRelation.successors(s,l));
+                }
+                previous=s;
+                s=successor;
+                successor=new States<>();
+            }
+            Iterator<S> iterator=s.iterator();
+            while(iterator.hasNext()){
+                for(S f: setOfFinalStates.getSetofStates()){
+                    if(iterator.next().toString().equals(f.toString())){
+                        return false;
+                    }
+                }
+            }
+
+        }
+        return true;
     }
 
     public boolean isDeterministic(){

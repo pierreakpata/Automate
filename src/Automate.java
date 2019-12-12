@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * Automate
@@ -76,11 +77,17 @@ public class Automate {
         AFN<State> afn=new AFN<>(alphabet, Q, initialStates, finalStates, Delta);
 
         //Test d'appartenance d'un mot au langage d'automate
-        ArrayList<Letter> contain=new ArrayList<>();
-        contain.add(letter1);
-        contain.add(letter2);
-        Word word=new Word(contain);
-        System.out.println(afn.recognize(word));
+        ArrayList<Letter> contain1=new ArrayList<>();
+        ArrayList<Letter> contain2=new ArrayList<>();
+        contain1.add(letter1);
+        contain1.add(letter2);
+        contain2.add(letter1);
+        contain2.add(letter2);
+        contain2.add(letter1);
+        Word word1=new Word(contain1);
+        Word word2=new Word(contain2);
+        System.out.println("ab: "+afn.recognize(word1));
+        System.out.println("aba: "+afn.recognize(word2));
 
         //Test de lanage vide
         System.out.println(afn.emptyLanguage());
