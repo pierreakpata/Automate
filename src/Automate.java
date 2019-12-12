@@ -90,7 +90,7 @@ public class Automate {
         System.out.println("aba: "+afn.recognize(word2));
 
         //Test de lanage vide
-        System.out.println(afn.emptyLanguage());
+        System.out.println("Langage vide?: "+afn.emptyLanguage());
 
         //Test du déterminisme
         System.out.println(afn.isDeterministic());
