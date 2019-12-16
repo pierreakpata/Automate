@@ -2,8 +2,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 /**
- * classe States 
- *
+ * @author AKPATA Kodjo Pierre
+ * @param <S>
  */
 public class States<S>
 {

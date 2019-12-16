@@ -1,6 +1,6 @@
 /**
- * classe Transition
- *
+ * @author AKPATA Kodjo Pierre
+ * @param <S>
  */
 public class Transition<S> 
 {

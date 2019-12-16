@@ -2,11 +2,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-/**
- * Automate
- *
- */
 
+/**
+ * @author AKPATA Kodjo Pierre
+ */
 public class Automate {
     public static void main (String[] args) {
          // création de lettres
@@ -99,8 +98,14 @@ public class Automate {
         System.out.println(afn.isComplete());
 
         //Completation de l'automate
-        afn.complete();
-        System.out.println(afn.isComplete());
+        /*afn.complete();
+        System.out.println(afn.isComplete());*/
+
+        //Test de la méthode accessible
+        System.out.println(afn.reachable().toString());
+
+        //Test de la méthode co-accessible
+        System.out.println(afn.coreachable().toString());
 
     }
 }

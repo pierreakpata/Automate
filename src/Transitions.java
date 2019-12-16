@@ -2,8 +2,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 /**
- * classe Transitions
- *
+ * @author AKPATA Kodjo Pierre
+ * @param <S>
  */
 public class Transitions<S>
 {

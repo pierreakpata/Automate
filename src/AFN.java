@@ -1,6 +1,10 @@
 import java.util.HashSet;
 import java.util.Iterator;
 
+/**
+ * @author AKPATA Kodjo Pierre
+ * @param <S>
+ */
 public class AFN <S>{
 
     private HashSet<Letter> alphabet;
@@ -9,6 +13,14 @@ public class AFN <S>{
     private States<S> setOfFinalStates;
     private Transitions<S> transitionRelation;
 
+    /**
+     * Constructor
+     * @param alphabet
+     * @param setOfStates
+     * @param setOfInitialStates
+     * @param setOfFinalStates
+     * @param transitionRelation
+     */
     public AFN(HashSet alphabet, States<S> setOfStates, States<S> setOfInitialStates, States<S> setOfFinalStates, Transitions<S> transitionRelation){
         this.alphabet=alphabet;
         this.setOfStates=setOfStates;
@@ -18,6 +30,11 @@ public class AFN <S>{
     }
 
 
+    /**
+     *
+     * @param w
+     * @return true if the word is recognized
+     */
     public boolean recognize(Word w){
         States<S> s=setOfInitialStates;
         for(Letter l: w.getContain()){
@@ -37,6 +54,10 @@ public class AFN <S>{
         return false;
     }
 
+    /**
+     *
+     * @return true if language is empty
+     */
     public boolean emptyLanguage(){
         if(setOfInitialStates.getSetofStates().isEmpty()){
             return true;
@@ -69,6 +90,10 @@ public class AFN <S>{
         return true;
     }
 
+    /**
+     *
+     * @return true if automate is deterministic
+     */
     public boolean isDeterministic(){
         Iterator<S> states=setOfStates.iterator();
         while(states.hasNext()){
@@ -82,6 +107,10 @@ public class AFN <S>{
         return true;
     }
 
+    /**
+     *
+     * @return true if automate is complete
+     */
     public boolean isComplete(){
         Iterator<S> states=setOfStates.iterator();
         while(states.hasNext()){
@@ -95,6 +124,9 @@ public class AFN <S>{
         return true;
     }
 
+    /**
+     * complete the automate
+     */
     public void complete(){
         if(!isComplete()){
             State well=new State("I");
@@ -110,6 +142,53 @@ public class AFN <S>{
                 }
             }
         }
+    }
+
+    public States<S> reachable(){
+        Iterator<S> iterator=setOfStates.iterator();
+        States<S> results=new States<>();
+        while(iterator.hasNext()){
+            S state=iterator.next();
+            if(!setOfInitialStates.getSetofStates().contains(state) && !setOfFinalStates.getSetofStates().contains(state)){
+                for(Letter a: alphabet){
+                    States<S> successors= transitionRelation.successors(setOfInitialStates, a);
+                    States<S> previous=new States<>();
+                    while(!successors.getSetofStates().equals(previous.getSetofStates())){
+                        if(successors.getSetofStates().contains(state)){
+                            results.addState(state);
+                            break;
+                        }
+                        previous=successors;
+                        successors=transitionRelation.successors(successors, a);
+                    }
+                }
+            }
+        }
+        return results;
+    }
+
+    public States<S> coreachable(){
+        Iterator<S> iterator=setOfStates.iterator();
+        States<S> results=new States<>();
+        while(iterator.hasNext()){
+            S state=iterator.next();
+            if(!setOfInitialStates.getSetofStates().contains(state) && !setOfFinalStates.getSetofStates().contains(state)){
+                for(Letter a: alphabet){
+                    States<S> successors= transitionRelation.successor(state, a);
+                    States<S> previous=new States<>();
+                    while(!successors.getSetofStates().equals(previous.getSetofStates())){
+                       for(S s: successors.getSetofStates()){
+                           if(setOfFinalStates.getSetofStates().contains(s)){
+                               results.addState(state);
+                           }
+                       }
+                        previous=successors;
+                        successors=transitionRelation.successors(successors, a);
+                    }
+                }
+            }
+        }
+        return results;
     }
 
     public HashSet<Letter> getAlphabet() {

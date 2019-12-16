@@ -1,7 +1,7 @@
 
+
 /**
- * classe Letter
- *
+ * @author AKPATA Kodjo Pierre
  */
 public class Letter
 {
@@ -17,7 +17,7 @@ public class Letter
         this.description = a; 
     }
 
-    
+
     public String toString()
     { return this.description;}
     

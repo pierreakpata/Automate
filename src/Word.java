@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/**
+ * @author AKPATA Kodjo Pierre
+ */
 public class Word {
     private ArrayList<Letter> contain;
 

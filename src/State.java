@@ -1,7 +1,6 @@
 
 /**
- * classe State
- *
+ * @author AKPATA Kodjo Pierre
  */
 public class State
 {
@@ -23,7 +22,7 @@ public class State
     {
         return this.name;
     }
-    
+
     public String toString()
     {
         return this.name;
