@@ -16,12 +16,14 @@ public class Automate {
          State state1 = new State("q_1");
          State state2 = new State("q_2");
          State state3 = new State("q_3");
+         //State state4 = new State("q_4");
 
          // Création d'un objet de type States
          States<State> Q = new States<State>();
          Q.addState(state1);
          Q.addState(state2);
          Q.addState(state3);
+         //Q.addState(state4);
 
          System.out.println(Q.toString());
 
@@ -32,6 +34,8 @@ public class Automate {
          Transition t3 = new Transition(state1,letter2,state3);
          Transition t4 = new Transition(state3,letter2,state3);
          Transition t5 = new Transition(state3,letter1,state2);
+         //Transition t6 = new Transition(state2, letter2, state4);
+         //Transition t7 = new Transition(state4, letter1, state3);
 
          //création de l'ensemble des  transitions
          Transitions<State> Delta = new Transitions<State>();
@@ -40,6 +44,8 @@ public class Automate {
          Delta.addTransition(t3);
          Delta.addTransition(t4);
          Delta.addTransition(t5);
+         //Delta.addTransition(t6);
+         //Delta.addTransition(t7);
 
         //affiche les successeurs par a de l'état q_1
         States E1 = Delta.successor(state1,letter1);
@@ -107,5 +113,16 @@ public class Automate {
         //Test de la méthode co-accessible
         System.out.println(afn.coreachable().toString());
 
+        //Test de la méthode trim
+        afn.trim();
+        System.out.println("Nouvelles états: "+Q.toString());
+
+        //affiche les successeurs par a de l'état q_1
+        States d1 = Delta.successor(state1,letter1);
+        System.out.println(d1.toString());
+
+        //affiche les successeurs par a de l'état q_3
+        States d2 = Delta.successor(state3,letter1);
+        System.out.println(d2.toString());
     }
 }

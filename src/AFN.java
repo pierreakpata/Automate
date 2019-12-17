@@ -66,25 +66,20 @@ public class AFN <S>{
            return true;
         }
         else if(!setOfInitialStates.getSetofStates().isEmpty() && !setOfFinalStates.getSetofStates().isEmpty()){
-            States<S> s=setOfInitialStates;
+            States<S> successors=setOfInitialStates;
             States<S> previous=new States<>();
-            States<S> successor=new States<>();
-            while(!s.getSetofStates().equals(previous.getSetofStates())){
+            States<S> temp=new States<>();
+            while(!successors.getSetofStates().equals(previous.getSetofStates())){
                 for(Letter l: alphabet){
-                    successor.addAllStates(transitionRelation.successors(s,l));
+                    temp.addAllStates(transitionRelation.successors(successors,l));
                 }
-                previous=s;
-                s=successor;
-                successor=new States<>();
+                previous=successors;
+                successors=temp;
+                temp=new States<>();
             }
-            Iterator<S> iterator=s.iterator();
-            while(iterator.hasNext()){
-                for(S f: setOfFinalStates.getSetofStates()){
-                    if(iterator.next().toString().equals(f.toString())){
-                        return false;
-                    }
-                }
-            }
+           if(isFinally(successors)){
+               return true;
+           }
 
         }
         return true;
@@ -144,52 +139,114 @@ public class AFN <S>{
         }
     }
 
+    /**
+     *
+     * @return un ensemble d'état pour lesquels il existe un calcul à partir de l'état initial
+     */
     public States<S> reachable(){
         Iterator<S> iterator=setOfStates.iterator();
         States<S> results=new States<>();
         while(iterator.hasNext()){
             S state=iterator.next();
-            if(!setOfInitialStates.getSetofStates().contains(state) && !setOfFinalStates.getSetofStates().contains(state)){
-                for(Letter a: alphabet){
-                    States<S> successors= transitionRelation.successors(setOfInitialStates, a);
-                    States<S> previous=new States<>();
-                    while(!successors.getSetofStates().equals(previous.getSetofStates())){
-                        if(successors.getSetofStates().contains(state)){
-                            results.addState(state);
-                            break;
-                        }
-                        previous=successors;
-                        successors=transitionRelation.successors(successors, a);
-                    }
+            States<S> successors=setOfInitialStates;
+            States<S> previous=new States<>();
+            States<S> temp= new States<>();
+            while(!successors.getSetofStates().equals(previous.getSetofStates())){
+                for(Letter l: alphabet){
+                    temp.addAllStates(transitionRelation.successors(successors,l));
                 }
+                previous=successors;
+                successors=temp;
+                temp=new States<>();
+            }
+            if(successors.getSetofStates().contains(state)){
+                results.addState(state);
             }
         }
         return results;
     }
 
+    /**
+     *
+     * @param s
+     * @return la liste des successeurs d'un état  pour tout alphabet
+     */
+    private States<S> successorsOfStateForAllLetter(S s){
+        States<S> successors=new States<>();
+        for(Letter l: alphabet){
+            successors.addAllStates(transitionRelation.successor(s,l));
+        }
+        return successors;
+    }
+
+    /**
+     *
+     * @param s
+     * @return true s'il exist au moins un état final parmis les successeurs
+     */
+    private boolean isFinally(States<S> s){
+        Iterator<S> iterator2=s.iterator();
+        while(iterator2.hasNext()){
+            for(S f: setOfFinalStates.getSetofStates()){
+                if(iterator2.next().toString().equals(f.toString())){
+                   return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     *
+     * @return l'ensemble des états pour lesquels il existe un calcul jusqu'à l'état final
+     */
     public States<S> coreachable(){
         Iterator<S> iterator=setOfStates.iterator();
         States<S> results=new States<>();
         while(iterator.hasNext()){
             S state=iterator.next();
-            if(!setOfInitialStates.getSetofStates().contains(state) && !setOfFinalStates.getSetofStates().contains(state)){
-                for(Letter a: alphabet){
-                    States<S> successors= transitionRelation.successor(state, a);
-                    States<S> previous=new States<>();
-                    while(!successors.getSetofStates().equals(previous.getSetofStates())){
-                       for(S s: successors.getSetofStates()){
-                           if(setOfFinalStates.getSetofStates().contains(s)){
-                               results.addState(state);
-                           }
-                       }
-                        previous=successors;
-                        successors=transitionRelation.successors(successors, a);
-                    }
+            States<S> successors=successorsOfStateForAllLetter(state);
+            States<S> previous=new States<>();
+            States<S> temp= new States<>();
+            while(!successors.getSetofStates().equals(previous.getSetofStates())){
+                for(Letter l: alphabet){
+                    temp.addAllStates(transitionRelation.successors(successors,l));
                 }
+                previous=successors;
+                successors=temp;
+                temp=new States<>();
             }
+            if(isFinally(successors)){
+                results.addState(state);
+            }
+
         }
         return results;
     }
+
+    /**
+     * élimine les états inutiles et leurs transitions
+     */
+    public void trim(){
+        States<S> accessible=reachable();
+        States<S> coaccessible=coreachable();
+        HashSet<S> deleteState=new HashSet<>();
+        for(S s: setOfStates.getSetofStates()){
+            if(!accessible.getSetofStates().contains(s) || !coaccessible.getSetofStates().contains(s)){
+                HashSet<Transition<S>> transitions=transitionRelation.getSetofTransitions();
+                HashSet<Transition<S>> temp=new HashSet<>();
+                for(Transition t: transitions){
+                    if(t.getSource().toString().equals(s.toString()) || t.getTarget().toString().equals(s.toString())){
+                        temp.add(t);
+                    }
+                }
+                transitions.removeAll(temp);
+                deleteState.add(s);
+            }
+        }
+        setOfStates.getSetofStates().removeAll(deleteState);
+    }
+
 
     public HashSet<Letter> getAlphabet() {
         return alphabet;
