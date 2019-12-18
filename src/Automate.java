@@ -8,6 +8,10 @@ import java.util.List;
  */
 public class Automate {
     public static void main (String[] args) {
+
+        /**
+         * Test du TP1
+         */
          // création de lettres
          Letter letter1 = new Letter("a");
          Letter letter2 = new Letter("b");
@@ -68,6 +72,9 @@ public class Automate {
         System.out.println(S1.toString());
         System.out.println(E4.toString());
 
+        /**
+         * Test du TP2
+         */
         //Création de l'automate
         HashSet<Letter> alphabet=new HashSet<>();
         alphabet.add(letter1);
@@ -107,6 +114,9 @@ public class Automate {
         /*afn.complete();
         System.out.println(afn.isComplete());*/
 
+        /**
+         * Test du TP3
+         */
         //Test de la méthode miroir
         AFN<State> afnMiroir=afn.mirror();
         System.out.println("Etat intiaux Miroir: "+afnMiroir.getSetOfInitialStates());
