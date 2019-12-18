@@ -79,7 +79,7 @@ public class Automate {
         States<State> finalStates=new States<>();
         finalStates.addState(state3);
 
-        AFN<State> afn=new AFN<>(alphabet, Q, initialStates, finalStates, Delta);
+        AFN<State> afn=new AFN(alphabet, Q, initialStates, finalStates, Delta);
 
         //Test d'appartenance d'un mot au langage d'automate
         ArrayList<Letter> contain1=new ArrayList<>();
@@ -106,6 +106,29 @@ public class Automate {
         //Completation de l'automate
         /*afn.complete();
         System.out.println(afn.isComplete());*/
+
+        //Test de la méthode miroir
+        AFN<State> afnMiroir=afn.mirror();
+        System.out.println("Etat intiaux Miroir: "+afnMiroir.getSetOfInitialStates());
+        System.out.println("Etat finaux Miroir: "+afnMiroir.getSetOfFinalStates());
+        //successeurs de q1 par la lettre a
+        States s1 = afnMiroir.getTransitionRelation().successor(state1,letter1);
+        System.out.println(s1.toString());
+
+        //successeurs de q2 par la lettre a
+        States s2 = afnMiroir.getTransitionRelation().successor(state2,letter1);
+        System.out.println(s2.toString());
+
+        //successeurs de q3 par la lettre b
+        States s3 = afnMiroir.getTransitionRelation().successor(state3,letter2);
+        System.out.println(s3.toString());
+
+        ArrayList<Letter> contain3=new ArrayList<>();
+        contain3.add(letter2);
+        contain3.add(letter1);
+        Word word3=new Word(contain3);
+        //Test du mot ba qui est l'inverse de ab reconnue par l'automate
+        System.out.println("ba: "+afnMiroir.recognize(word3));
 
         //Test de la méthode accessible
         System.out.println(afn.reachable().toString());

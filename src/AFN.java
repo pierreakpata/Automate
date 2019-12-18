@@ -248,6 +248,21 @@ public class AFN <S>{
     }
 
 
+    /**
+     *
+     * @return automate miroir
+     */
+    public AFN<S> mirror(){
+        States<S> initialStates=setOfFinalStates;
+        States<S> finalStates=setOfInitialStates;
+        Transitions<S> transitions=new Transitions<>();
+        for(Transition t: transitionRelation.getSetofTransitions()){
+            transitions.addTransition(new Transition(t.getTarget(), t.getLabel(), t.getSource()));
+        }
+        AFN<S> afnMirror=new AFN(alphabet, setOfStates, initialStates, finalStates, transitions);
+        return afnMirror;
+    }
+
     public HashSet<Letter> getAlphabet() {
         return alphabet;
     }
